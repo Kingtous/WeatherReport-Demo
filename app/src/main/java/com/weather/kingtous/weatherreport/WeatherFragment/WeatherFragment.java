@@ -11,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.weather.kingtous.weatherreport.R;
-import com.weather.kingtous.weatherreport.WeatherDetail;
-import com.weather.kingtous.weatherreport.WeatherTotal;
+import com.weather.kingtous.weatherreport.WeatherRequest.WeatherDetail;
 
 public class WeatherFragment extends Fragment {
 

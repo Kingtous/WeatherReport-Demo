@@ -1,15 +1,12 @@
-package com.weather.kingtous.weatherreport;
+package com.weather.kingtous.weatherreport.WeatherRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 
-class Query {
+public class Query {
 
     private String url="http://wthrcdn.etouch.cn/weather_mini?city=";
 

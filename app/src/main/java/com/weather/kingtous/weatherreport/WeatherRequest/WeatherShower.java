@@ -1,6 +1,5 @@
-package com.weather.kingtous.weatherreport;
+package com.weather.kingtous.weatherreport.WeatherRequest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.weather.kingtous.weatherreport.R;
 import com.weather.kingtous.weatherreport.WeatherFragment.WeatherFragment;
 
 import java.util.ArrayList;

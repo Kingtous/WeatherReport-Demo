@@ -1,4 +1,4 @@
-package com.weather.kingtous.weatherreport;
+package com.weather.kingtous.weatherreport.WeatherRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;

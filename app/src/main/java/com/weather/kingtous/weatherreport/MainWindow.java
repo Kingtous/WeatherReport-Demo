@@ -1,14 +1,11 @@
 package com.weather.kingtous.weatherreport;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
+import com.weather.kingtous.weatherreport.LocationProvider.LocationFinder;
+import com.weather.kingtous.weatherreport.WeatherRequest.Query;
+import com.weather.kingtous.weatherreport.WeatherRequest.WeatherShower;
+import com.weather.kingtous.weatherreport.WeatherRequest.WeatherTotal;
 
 
 public class MainWindow extends AppCompatActivity {
@@ -26,6 +27,7 @@ public class MainWindow extends AppCompatActivity {
     Query query;
     MenuItem settings;
     Button QueryButton;
+    Button LocateButton;
     EditText cityText;
 
 
@@ -38,7 +40,9 @@ public class MainWindow extends AppCompatActivity {
         query=new Query();
         settings = findViewById(R.id.action_settings);
         QueryButton=findViewById(R.id.QueryButton);
+        LocateButton=findViewById(R.id.Locate);
         cityText=findViewById(R.id.CityText);
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,7 +63,6 @@ public class MainWindow extends AppCompatActivity {
 
 
 
-
         QueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +75,7 @@ public class MainWindow extends AppCompatActivity {
                         if (weather.getCity()!=null)
                         {
                             //查询成功
-                            Intent intent=new Intent(MainWindow.this,WeatherShower.class);
+                            Intent intent=new Intent(MainWindow.this, WeatherShower.class);
                             intent.putExtra("Weather",new Gson().toJson(weather));
                             startActivity(intent);
                         }
@@ -85,6 +88,16 @@ public class MainWindow extends AppCompatActivity {
                         Looper.loop();
                     }
                 }).start();
+
+        LocateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LocationFinder finder=new LocationFinder();
+                finder.openGPSSettings();
+
+            }
+        });
 
             }
         });
