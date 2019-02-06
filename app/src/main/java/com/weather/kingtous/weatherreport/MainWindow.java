@@ -2,13 +2,14 @@ package com.weather.kingtous.weatherreport;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,10 @@ public class MainWindow extends AppCompatActivity {
     MenuItem settings;
     Button QueryButton;
     Button LocateButton;
+    Button CityListButton;
     EditText cityText;
+    Toolbar toolbar;
+    FloatingActionButton fab;
 
 
     @Override
@@ -41,14 +45,12 @@ public class MainWindow extends AppCompatActivity {
         settings = findViewById(R.id.action_settings);
         QueryButton=findViewById(R.id.QueryButton);
         LocateButton=findViewById(R.id.Locate);
+        CityListButton=findViewById(R.id.CityList);
         cityText=findViewById(R.id.CityText);
-
-
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,28 +90,30 @@ public class MainWindow extends AppCompatActivity {
                         Looper.loop();
                     }
                 }).start();
-
-        LocateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                LocationFinder finder=new LocationFinder();
-                finder.openGPSSettings();
-
-            }
-        });
-
             }
         });
 
 
         //刷新城市
-        new Thread(new Runnable() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                query.update_city();
+//            }
+//        }).start();
+        LocateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                query.update_city();
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent=new Intent(MainWindow.this,LocationFinder.class);
+                        startActivityForResult(intent,1);
+                    }
+                }).start();
+
             }
-        }).start();
+        });
     }
 
     @Override
@@ -140,6 +144,19 @@ public class MainWindow extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==1)//定位数据
+        {
+            assert data != null;
+            String cityTMP=data.getStringExtra("Location");
+            cityText.setText(cityTMP);
+        }
+
     }
 
     class SettingListener implements DialogInterface.OnClickListener {

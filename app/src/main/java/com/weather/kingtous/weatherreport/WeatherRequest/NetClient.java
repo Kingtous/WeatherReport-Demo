@@ -1,7 +1,6 @@
 package com.weather.kingtous.weatherreport.WeatherRequest;
 
 import android.os.Looper;
-import android.support.v7.app.AlertDialog;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
