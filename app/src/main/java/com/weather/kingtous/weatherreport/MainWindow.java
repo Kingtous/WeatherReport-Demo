@@ -1,5 +1,6 @@
 package com.weather.kingtous.weatherreport;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -93,26 +94,12 @@ public class MainWindow extends AppCompatActivity {
             }
         });
 
-
-        //刷新城市
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                query.update_city();
-//            }
-//        }).start();
         LocateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
                         Intent intent=new Intent(MainWindow.this,LocationFinder.class);
                         startActivityForResult(intent,1);
                     }
-                }).start();
-
-            }
         });
     }
 
@@ -152,9 +139,14 @@ public class MainWindow extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==1)//定位数据
         {
-            assert data != null;
-            String cityTMP=data.getStringExtra("Location");
-            cityText.setText(cityTMP);
+            String cityTMP= null;
+            if (data != null) {
+                cityTMP = data.getStringExtra("Location");
+            }
+            if (cityTMP!=null)
+            {
+                cityText.setText(cityTMP);
+            }
         }
 
     }

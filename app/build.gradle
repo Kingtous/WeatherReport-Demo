@@ -4,9 +4,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.weather.kingtous.weatherreport"
-        minSdkVersion 23
+        minSdkVersion 25
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -22,15 +23,15 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
-    implementation 'com.google.android.material:material:1.0.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
     implementation files('libs/mysql-connector-java-5.1.47.jar')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0-beta01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha02'
     //implementation 'com.jakewharton:butterknife:10.0.0'
     //annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
     implementation files('libs/gson-2.2.4.jar')

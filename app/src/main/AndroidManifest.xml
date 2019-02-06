@@ -28,9 +28,12 @@
 
             </intent-filter>
         </activity>
+
         <activity android:name=".WeatherRequest.WeatherShower" />
         <activity android:name=".LocationProvider.LocationFinder" />
+
     </application>
+
 
 
 </manifest>
