@@ -5,13 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LocationProvider.LocationList">
 
+
+    <include layout="@layout/search_bar_layout"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/CityRecyclerListing"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:scrollbars="vertical"
         android:visibility="visible"
-        android:clickable="true"
-        tools:listitem="@layout/city_text"
-        android:focusable="true" />
+        tools:listitem="@layout/city_text" />
 </RelativeLayout>

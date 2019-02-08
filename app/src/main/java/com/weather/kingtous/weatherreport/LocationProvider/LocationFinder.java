@@ -29,13 +29,12 @@ import androidx.annotation.NonNull;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class LocationFinder extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class LocationFinder extends Activity {
 
     LocationManager manager;
     Location location;
     String outputLocation="";
 
-    int GPS_PERMISSION_CODE=1;
 
 
     @Override
@@ -48,14 +47,6 @@ public class LocationFinder extends AppCompatActivity implements EasyPermissions
 
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode==GPS_PERMISSION_CODE)
-        {
-            EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
-        }
-    }
 
     @SuppressLint("MissingPermission")
     private void openGPSSettings() {
@@ -68,10 +59,6 @@ public class LocationFinder extends AppCompatActivity implements EasyPermissions
             criteria.setAltitudeRequired(false);
             criteria.setBearingRequired(false);
             criteria.setPowerRequirement(Criteria.POWER_LOW);
-            if (!EasyPermissions.hasPermissions(this,Manifest.permission.ACCESS_FINE_LOCATION)) {
-                String[] permissions={Manifest.permission.ACCESS_FINE_LOCATION};
-                EasyPermissions.requestPermissions(this,"用于城市定位",GPS_PERMISSION_CODE,permissions);
-            }
             String BestProvider=manager.getBestProvider(criteria,true);
             if (BestProvider!=null)
             {
@@ -93,6 +80,7 @@ public class LocationFinder extends AppCompatActivity implements EasyPermissions
                         Toast.makeText(this,"获取位置失败，请检查GPS信号",Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(LocationFinder.this, MainWindow.class);
                         setResult(99,intent);
+                        finish();
                         return;
                     }
                 }
@@ -108,13 +96,15 @@ public class LocationFinder extends AppCompatActivity implements EasyPermissions
                     Intent intent=new Intent(LocationFinder.this, MainWindow.class);
                     intent.putExtra("Location",outputLocation);
                     setResult(1,intent);
+
                 }
             } catch (IOException e) {
+                Toast.makeText(this,"定位失败，请检查GPS状态.",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
-
-
-            return;
+            finally {
+                finish();
+            }
         }
 
         Toast.makeText(this, "请开启GPS！", Toast.LENGTH_SHORT).show();
@@ -123,18 +113,6 @@ public class LocationFinder extends AppCompatActivity implements EasyPermissions
 
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        Toast.makeText(this, "GPS权限授权成功", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        Toast.makeText(this, "GPS权限授权失败，请打开权限", Toast.LENGTH_SHORT).show();
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this).build().show();
-        }
-    }
 
 
     class locationlistener implements LocationListener

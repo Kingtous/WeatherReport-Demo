@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="城市选择"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@color/design_default_color_background"/>
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/SearchToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/SearchToolBarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tooltipText="搜索...">
+
+        </androidx.appcompat.widget.SearchView>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+</com.google.android.material.appbar.AppBarLayout>

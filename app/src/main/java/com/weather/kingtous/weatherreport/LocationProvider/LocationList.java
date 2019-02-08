@@ -1,5 +1,6 @@
 package com.weather.kingtous.weatherreport.LocationProvider;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class LocationList extends AppCompatActivity {
+public class LocationList extends Activity {
 
     Thread net;
     RecyclerView CityList;
@@ -43,14 +44,6 @@ public class LocationList extends AppCompatActivity {
     int CITY_SELECT_CODE =2;
 
     //接口
-    public interface OnItemClickListener{
-        void onItemClick(View view,int position);
-    }
-
-    public interface OnItemLongClickListener{
-        void onItemLongClick(View view,int position);
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +74,16 @@ public class LocationList extends AppCompatActivity {
             Cities = new ArrayList<String>();
             Cities.add("空");
         }
-        //可做排序，比较耗时
+        //可做排序，比较耗时，放到MySQL服务器上做
         //Collections.sort(Cities,new PinyinComparator());
         adapter = new mAdapter(this,Cities);
-        ((mAdapter) adapter).setOnItemClickListener(new OnItemClickListener() {
+        ((mAdapter) adapter).setOnItemClickListener(new mAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(LocationList.this,"你按了一下",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(LocationList.this,MainWindow.class);
+                intent.putExtra("Location",((mAdapter) adapter).list.get(position));
+                setResult(CITY_SELECT_CODE,intent);
+                finish();
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

@@ -15,13 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class mAdapter extends RecyclerView.Adapter<mAdapter.myholder>  {
 
+    public interface OnItemClickListener{
+        void onItemClick(View view,int position);
+    }
+
+
     Context context;
-    ArrayList<String> list;
+    public ArrayList<String> list;
 
     //
-    private LocationList.OnItemClickListener mOnItemClickListener;
+    private OnItemClickListener mOnItemClickListener;
 
-    public void setOnItemClickListener(LocationList.OnItemClickListener mOnItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener){
         this.mOnItemClickListener = mOnItemClickListener;
     }
 

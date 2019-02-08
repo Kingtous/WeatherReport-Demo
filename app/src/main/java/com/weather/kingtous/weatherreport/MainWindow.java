@@ -1,21 +1,29 @@
 package com.weather.kingtous.weatherreport;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.weather.kingtous.weatherreport.LocationProvider.LocationFinder;
@@ -25,8 +33,10 @@ import com.weather.kingtous.weatherreport.WeatherRequest.Query;
 import com.weather.kingtous.weatherreport.WeatherRequest.WeatherShower;
 import com.weather.kingtous.weatherreport.WeatherRequest.WeatherTotal;
 
+import java.util.List;
 
-public class MainWindow extends AppCompatActivity {
+
+public class MainWindow extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
 
     //ui
     Query query;
@@ -40,6 +50,7 @@ public class MainWindow extends AppCompatActivity {
     //RequestCode
     int CITY_SELECT_CODE =2;
     int LOCATE_CODE=1;
+    int GPS_PERMISSION_CODE=1;
 
 
     @Override
@@ -103,8 +114,14 @@ public class MainWindow extends AppCompatActivity {
         LocateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        Intent intent=new Intent(MainWindow.this,LocationFinder.class);
-                        startActivityForResult(intent,LOCATE_CODE);
+                        Toast.makeText(MainWindow.this,"定位",Toast.LENGTH_SHORT).show();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent=new Intent(MainWindow.this,LocationFinder.class);
+                                startActivityForResult(intent,LOCATE_CODE);
+                            }
+                        }).start();
                     }
         });
 
@@ -115,6 +132,15 @@ public class MainWindow extends AppCompatActivity {
                 startActivityForResult(intent,CITY_SELECT_CODE);
             }
         });
+
+
+        //检查权限
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            String[] permissions={Manifest.permission.ACCESS_FINE_LOCATION};
+            EasyPermissions.requestPermissions(MainWindow.this,"为了不影响您的使用，请允许应用申请相应权限.",GPS_PERMISSION_CODE,permissions);
+        }
+
+
 
     }
 
@@ -165,11 +191,40 @@ public class MainWindow extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        Toast.makeText(this, "权限授权成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        Toast.makeText(this, "权限授权失败", Toast.LENGTH_SHORT).show();
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+        finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode==GPS_PERMISSION_CODE)
+        {
+            EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+        }
+    }
+
     class SettingListener implements DialogInterface.OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             new AlertDialog.Builder(MainWindow.this).setTitle("你点了不是，which值为" + which)
                     .setPositiveButton("是的", null)
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            finish();
+                        }
+                    })
                     .show();
         }
     }
