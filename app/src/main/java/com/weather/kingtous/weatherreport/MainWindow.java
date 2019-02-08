@@ -19,6 +19,8 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.weather.kingtous.weatherreport.LocationProvider.LocationFinder;
+import com.weather.kingtous.weatherreport.LocationProvider.LocationList;
+import com.weather.kingtous.weatherreport.WeatherRequest.NetClient;
 import com.weather.kingtous.weatherreport.WeatherRequest.Query;
 import com.weather.kingtous.weatherreport.WeatherRequest.WeatherShower;
 import com.weather.kingtous.weatherreport.WeatherRequest.WeatherTotal;
@@ -26,6 +28,7 @@ import com.weather.kingtous.weatherreport.WeatherRequest.WeatherTotal;
 
 public class MainWindow extends AppCompatActivity {
 
+    //ui
     Query query;
     MenuItem settings;
     Button QueryButton;
@@ -34,6 +37,9 @@ public class MainWindow extends AppCompatActivity {
     EditText cityText;
     Toolbar toolbar;
     FloatingActionButton fab;
+    //RequestCode
+    int CITY_SELECT_CODE =2;
+    int LOCATE_CODE=1;
 
 
     @Override
@@ -98,9 +104,18 @@ public class MainWindow extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                         Intent intent=new Intent(MainWindow.this,LocationFinder.class);
-                        startActivityForResult(intent,1);
+                        startActivityForResult(intent,LOCATE_CODE);
                     }
         });
+
+        CityListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainWindow.this, LocationList.class);
+                startActivityForResult(intent,CITY_SELECT_CODE);
+            }
+        });
+
     }
 
     @Override
@@ -137,7 +152,7 @@ public class MainWindow extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1)//定位数据
+        if (requestCode==LOCATE_CODE || requestCode==CITY_SELECT_CODE)//定位数据
         {
             String cityTMP= null;
             if (data != null) {
@@ -148,7 +163,6 @@ public class MainWindow extends AppCompatActivity {
                 cityText.setText(cityTMP);
             }
         }
-
     }
 
     class SettingListener implements DialogInterface.OnClickListener {

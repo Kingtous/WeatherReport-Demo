@@ -31,6 +31,7 @@
 
         <activity android:name=".WeatherRequest.WeatherShower" />
         <activity android:name=".LocationProvider.LocationFinder" />
+        <activity android:name=".LocationProvider.LocationList" />
 
     </application>
 

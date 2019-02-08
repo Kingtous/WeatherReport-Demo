@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".LocationProvider.LocationList">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/CityRecyclerListing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        android:clickable="true"
+        tools:listitem="@layout/city_text"
+        android:focusable="true" />
+</RelativeLayout>

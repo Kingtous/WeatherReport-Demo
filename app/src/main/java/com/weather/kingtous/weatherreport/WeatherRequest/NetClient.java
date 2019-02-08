@@ -1,6 +1,8 @@
 package com.weather.kingtous.weatherreport.WeatherRequest;
 
+import android.app.AlertDialog;
 import android.os.Looper;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,14 +11,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-class NetClient {
+public class NetClient {
 
-    Connection cn;
-    Statement statement;
-    String MySQL_Address="jdbc:mysql://123.206.34.50:3306/Weather";
-    String user="cloud";
-    String passwd="jintao!123";
-    ArrayList<String> OutputList=new ArrayList<String>();
+    private Connection cn;
+    private Statement statement;
+    private String MySQL_Address="jdbc:mysql://123.206.34.50:3306/Weather";
+    private String user="cloud";
+    private String passwd="jintao!123";
+    private ArrayList<String> OutputList=new ArrayList<String>();
 
     ArrayList<String> getOutput()
     {
@@ -28,9 +30,7 @@ class NetClient {
                try {
                    Class.forName("com.mysql.jdbc.Driver");
                    cn = DriverManager.getConnection(MySQL_Address, user, passwd);
-
                    statement=cn.createStatement();
-                   Looper.loop();
                } catch (ClassNotFoundException e) {
                    e.printStackTrace();
                } catch (SQLException e) {
@@ -40,39 +40,53 @@ class NetClient {
                return 0;
     }
 
-    int Query(String QueryPlace)
+    public ArrayList<String> list()
     {
+        ConnectToCloudDataServer();
+
         try {
-            ResultSet set=statement.executeQuery("select * from CityCode where CityName="+"\""+QueryPlace+"\"");
+            if (cn == null)
+            {
+                throw new SQLException();
+            }
+            ResultSet set=statement.executeQuery("select CityName from CityCode limit 0,3000");
+            if (set == null)
+            {
+                throw new SQLException();
+            }
             while (set.next())
             {
-                OutputList.add(set.toString());
+                OutputList.add(set.getString("CityName"));
             }
-            return 0;
-
+            return OutputList;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+            return null;
+        }
+        finally {
+            CloseConnection();
         }
 
     }
 
 
 
-    int CloseConnection()
+    void CloseConnection()
     {
         try {
-            cn.close();
-            statement.close();
-            return 0;
-
+            if (cn!=null)
+            {
+                cn.close();
+            }
+            if (statement!=null)
+            {
+                statement.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         }
 
     }
-
 
 }
