@@ -89,5 +89,10 @@ public class mAdapter extends RecyclerView.Adapter<mAdapter.myholder>  {
 
 
 
+    public void setFilter(ArrayList<String> words)
+    {
+        list=words;
+        notifyDataSetChanged();
+    }
 
 }

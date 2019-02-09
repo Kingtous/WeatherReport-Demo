@@ -49,7 +49,7 @@ public class NetClient {
             {
                 throw new SQLException();
             }
-            ResultSet set=statement.executeQuery("select CityName from CityCode order by convert(CityName using gbk) limit 0,3000");
+            ResultSet set=statement.executeQuery("select CityName from CityCode order by convert(CityName using gbk)");
             if (set == null)
             {
                 throw new SQLException();

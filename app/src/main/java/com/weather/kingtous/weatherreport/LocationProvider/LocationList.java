@@ -1,47 +1,36 @@
 package com.weather.kingtous.weatherreport.LocationProvider;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.weather.kingtous.weatherreport.MainWindow;
 import com.weather.kingtous.weatherreport.R;
 import com.weather.kingtous.weatherreport.WeatherRequest.NetClient;
 
-import net.sourceforge.pinyin4j.PinyinHelper;
-
 import java.util.ArrayList;
-import java.util.Comparator;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 
-public class LocationList extends Activity {
+public class LocationList extends AppCompatActivity {
 
-    Thread net;
     RecyclerView CityList;
     NetClient client;
     ArrayList<String> Cities;
     RecyclerView.Adapter adapter;
     int CITY_SELECT_CODE =2;
+    SearchView CitySearchView;
+    ProgressDialog Pdialog;
+
+    MyAsyncTask task;
 
     //接口
     @Override
@@ -50,22 +39,38 @@ public class LocationList extends Activity {
         setContentView(R.layout.city_listing);
         CityList = findViewById(R.id.CityRecyclerListing);
         client = new NetClient();
-        net = new Thread(new Runnable() {
+        CitySearchView=findViewById(R.id.SearchToolBarView);
+        Pdialog=new ProgressDialog(LocationList.this);
+        Pdialog.setMessage("正在获取城市数据");
+        task=new MyAsyncTask(Pdialog);
+
+        task.execute();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        CityList.setLayoutManager(layoutManager);
+        CityList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        CitySearchView.setSubmitButtonEnabled(true);
+        CitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void run() {
-                Cities = client.list();
+            public boolean onQueryTextSubmit(String query) {
+                ((mAdapter) adapter).setFilter(filter(Cities,query));
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ((mAdapter) adapter).setFilter(filter(Cities,newText));
+                return true;
             }
         });
-        net.start();
-        while (net.isAlive()) {
-            try {
-                Thread.sleep(1500);
-                Toast.makeText(this, "接收城市数据", Toast.LENGTH_SHORT).show();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        setView();
+    }
+
+
+
+    private void CallInternet()
+    {
+        Cities = client.list();
     }
 
     private void setView() {
@@ -74,6 +79,7 @@ public class LocationList extends Activity {
             Cities = new ArrayList<String>();
             Cities.add("空");
         }
+
         //可做排序，比较耗时，放到MySQL服务器上做
         //Collections.sort(Cities,new PinyinComparator());
         adapter = new mAdapter(this,Cities);
@@ -86,18 +92,68 @@ public class LocationList extends Activity {
                 finish();
             }
         });
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        CityList.setLayoutManager(layoutManager);
-
-
-
         CityList.setAdapter(adapter);
-        CityList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+    }
 
+    private ArrayList<String> filter(ArrayList<String> cities,String text)
+    {
+        if (text.equals(""))
+        {
+            return cities;
+        }
+        else
+        {
+            ArrayList<String> arrTmp=new ArrayList<>();
+            for (String city : cities)
+            {
+                if (city.contains(text))
+                {
+                    //contains不包含相同
+                    arrTmp.add(city);
+                }
+
+            }
+            return arrTmp;
+        }
     }
 
 
+
+    class MyAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        ProgressDialog dialog;
+
+        MyAsyncTask(ProgressDialog dialog)
+        {
+            this.dialog = dialog;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            publishProgress();
+            CallInternet();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            setView();
+            dialog.dismiss();
+            if (Cities!=null)
+            {
+                //防止异常
+                if (Cities.size()!=1)
+                {
+                    //为"空"(当做一个textview插入进去了)
+                    Toast.makeText(LocationList.this,"检索到"+Cities.size()+"个城市信息，上方搜索框可进行检索.",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 
 
 }

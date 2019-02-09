@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".LocationProvider.LocationList">
+    tools:context=".LocationProvider.LocationList"
+    android:orientation="vertical">
 
 
-    <include layout="@layout/search_bar_layout"/>
+    <include layout="@layout/search_bar_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/CityRecyclerListing"
@@ -16,5 +17,6 @@
         android:focusable="true"
         android:scrollbars="vertical"
         android:visibility="visible"
-        tools:listitem="@layout/city_text" />
-</RelativeLayout>
+        tools:listitem="@layout/city_text"
+        />
+</LinearLayout>
