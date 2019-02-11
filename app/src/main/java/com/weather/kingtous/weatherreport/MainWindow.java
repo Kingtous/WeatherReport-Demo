@@ -2,7 +2,6 @@ package com.weather.kingtous.weatherreport;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -191,7 +190,6 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode==GPS_PERMISSION_CODE)
         {
             EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
