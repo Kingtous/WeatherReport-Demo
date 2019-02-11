@@ -198,21 +198,6 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
         }
     }
 
-    class SettingListener implements DialogInterface.OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            new AlertDialog.Builder(MainWindow.this).setTitle("你点了不是，which值为" + which)
-                    .setPositiveButton("是的", null)
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            finish();
-                        }
-                    })
-                    .show();
-        }
-    }
-
 
     private class LocateTask extends AsyncTask<Void,Void,Void>
     {
