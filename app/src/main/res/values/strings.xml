@@ -6,4 +6,5 @@
     <string name="QueyButtonText">查询</string>
     <string name="LocateButton">定位</string>
     <string name="CityListButton">城市列表</string>
+    <string name="Title">天气预报Demo</string>
 </resources>
