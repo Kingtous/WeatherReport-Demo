@@ -1,4 +1,4 @@
-package com.weather.kingtous.weatherreport.WeatherRequest;
+package com.weather.kingtous.weatherreport.WeatherStructure;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ public class WeatherTotal{
     private String hint;
     private float TemperatureNow;
 
-    WeatherTotal()
+    public WeatherTotal()
     {
         forcastList=new ArrayList<WeatherDetail>();
         forcastList.clear();

@@ -81,7 +81,6 @@ public class LocationList extends AppCompatActivity {
         }
 
         //可做排序，比较耗时，放到MySQL服务器上做
-        //Collections.sort(Cities,new PinyinComparator());
         adapter = new mAdapter(this,Cities);
         ((mAdapter) adapter).setOnItemClickListener(new mAdapter.OnItemClickListener() {
             @Override

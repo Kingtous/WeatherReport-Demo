@@ -1,9 +1,11 @@
 package com.weather.kingtous.weatherreport.WeatherRequest;
 
+import com.weather.kingtous.weatherreport.WeatherStructure.WeatherDetail;
+import com.weather.kingtous.weatherreport.WeatherStructure.WeatherTotal;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class Query {
@@ -27,7 +29,6 @@ public class Query {
             }
         }
         return tmp;
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.weather.kingtous.weatherreport.WeatherRequest;
+package com.weather.kingtous.weatherreport.WeatherStructure;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ public class WeatherDetail implements Serializable {
     String WindD;//direction
     String WeatherType;
 
-    WeatherDetail(JSONObject weatherobj)
+    public WeatherDetail(JSONObject weatherobj)
     {
         try {
             date=weatherobj.getString("date");

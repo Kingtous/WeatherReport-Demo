@@ -1,13 +1,12 @@
 package com.weather.kingtous.weatherreport;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,36 +16,36 @@ import androidx.appcompat.widget.Toolbar;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import android.util.AttributeSet;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.weather.kingtous.weatherreport.LocationProvider.LocationFinder;
 import com.weather.kingtous.weatherreport.LocationProvider.LocationList;
-import com.weather.kingtous.weatherreport.WeatherRequest.NetClient;
 import com.weather.kingtous.weatherreport.WeatherRequest.Query;
 import com.weather.kingtous.weatherreport.WeatherRequest.WeatherShower;
-import com.weather.kingtous.weatherreport.WeatherRequest.WeatherTotal;
+import com.weather.kingtous.weatherreport.WeatherStructure.WeatherTotal;
 
 import java.util.List;
-
 
 public class MainWindow extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
 
     //ui
     Query query;
-    MenuItem settings;
+    MenuItem about;
     Button QueryButton;
     Button LocateButton;
     Button CityListButton;
     EditText cityText;
     Toolbar toolbar;
-    FloatingActionButton fab;
     //RequestCode
     int CITY_SELECT_CODE =2;
     int LOCATE_CODE=1;
@@ -60,28 +59,13 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
 
         //Intialize
         query=new Query();
-        settings = findViewById(R.id.action_settings);
+        about = findViewById(R.id.about);
         QueryButton=findViewById(R.id.QueryButton);
         LocateButton=findViewById(R.id.Locate);
         CityListButton=findViewById(R.id.CityList);
         cityText=findViewById(R.id.CityText);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(MainWindow.this)
-                        .setTitle("查询的城市为度.")
-                        .setPositiveButton("好的", null)
-                        .show();
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //       .setAction("Action", null).show();
-            }
-        });
-
-
 
         QueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,15 +98,9 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
         LocateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        Toast.makeText(MainWindow.this,"定位",Toast.LENGTH_SHORT).show();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent=new Intent(MainWindow.this,LocationFinder.class);
-                                startActivityForResult(intent,LOCATE_CODE);
-                            }
-                        }).start();
-                    }
+                LocateTask task=new LocateTask();
+                task.execute();
+            }
         });
 
         CityListButton.setOnClickListener(new View.OnClickListener() {
@@ -133,14 +111,17 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
             }
         });
 
+        getPermission();
+    }
 
+
+    private void getPermission()
+    {
         //检查权限
         if (!EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             String[] permissions={Manifest.permission.ACCESS_FINE_LOCATION};
             EasyPermissions.requestPermissions(MainWindow.this,"为了不影响您的使用，请允许应用申请相应权限.",GPS_PERMISSION_CODE,permissions);
         }
-
-
 
     }
 
@@ -159,15 +140,18 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.about) {
+            //关于
+            TextView view=new TextView(this);
+            SpannableString s=new SpannableString("  天气预报Demo\n  作者:Kingtous\n  项目地址:\n  https://github.com/Kingtous/WeatherReport-Demo");
+            Linkify.addLinks(s,Linkify.WEB_URLS);
+            view.setText(s);
+            view.setMovementMethod(LinkMovementMethod.getInstance());
 
-
-            new AlertDialog.Builder(MainWindow.this).setTitle("想点设置？")
-                    .setPositiveButton("是的", null)
-                    .setNegativeButton("不是", new SettingListener())
+            new AlertDialog.Builder(MainWindow.this).setTitle("关于")
+                    .setView(view)
+                    .setPositiveButton("好", null)
                     .show();
-
-
             return true;
         }
 
@@ -229,6 +213,28 @@ public class MainWindow extends AppCompatActivity implements EasyPermissions.Per
         }
     }
 
+
+    private class LocateTask extends AsyncTask<Void,Void,Void>
+    {
+        ProgressDialog dialog=new ProgressDialog(MainWindow.this);
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("正在定位");
+            dialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Intent intent=new Intent(MainWindow.this,LocationFinder.class);
+            startActivityForResult(intent,LOCATE_CODE);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            dialog.dismiss();
+        }
+    }
 
 }
 

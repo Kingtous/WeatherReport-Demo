@@ -23,7 +23,8 @@
             android:id="@+id/WeatherImage"
             android:layout_width="match_parent"
             android:layout_height="165dp"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:srcCompat="@drawable/ic_launcher_background"
+            tools:srcCompat="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/Label_Date"

@@ -19,7 +19,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainWindow"
-            android:label="@string/app_name"
+            android:label="天气预报"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,9 +29,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".WeatherRequest.WeatherShower" />
-        <activity android:name=".LocationProvider.LocationFinder" />
-        <activity android:name=".LocationProvider.LocationList" />
+        <activity android:name=".WeatherRequest.WeatherShower"
+            android:label="天气详情"
+            />
+        <activity android:name=".LocationProvider.LocationFinder"
+            android:label="定位"
+            />
+        <activity android:name=".LocationProvider.LocationList"
+            android:label="城市列表"
+            />
 
     </application>
 

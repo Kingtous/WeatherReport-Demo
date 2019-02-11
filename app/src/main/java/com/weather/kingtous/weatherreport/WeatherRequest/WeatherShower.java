@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.weather.kingtous.weatherreport.R;
 import com.weather.kingtous.weatherreport.WeatherFragment.WeatherFragment;
+import com.weather.kingtous.weatherreport.WeatherStructure.WeatherTotal;
 
 import java.util.ArrayList;
 import java.util.List;
